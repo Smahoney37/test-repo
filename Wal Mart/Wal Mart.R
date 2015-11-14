@@ -1,15 +1,19 @@
 #load data
+
+#necessary packages
+library(randomForest)
+library(rpart)
+library(reshape2)
+library(data.table)
+library(sqldf)
+
 walmart.test=read.csv(file="/volumes/storage/skydrive/data projects/r/kaggle/wal mart/test.csv",header=T)
 walmart.train=read.csv(file="/volumes/storage/skydrive/data projects/r/kaggle/wal mart/train.csv",header=T)
 walmart.samp.submit=read.csv(file="/volumes/storage/skydrive/data projects/r/kaggle/wal mart/sample_submission.csv")
 w.t.dt=data.table(walmart.train)
 head(walmart.train.dt)
   
-#necessary packages
-library(randomForest)
-library(rpart)
-library(reshape2)
-library(data.table)
+
 
 #explore a bit
 summary(walmart.train)
@@ -34,11 +38,10 @@ vn.v=unique(w.t.dt$VisitNumber)
 split=length(vn.v)
 w.t.1=w.t.dt[1:(round(split)/2),]
 w.t.2=w.t.dt[((round(split))/2+1):split,]
-w.t.1
 
-w.t.rs1=dcast(w.t.1,TripType+VisitNumber+Weekday~Upc,value.var="ScanCount",fun.aggregate=sum)
-w.t.rs2=dcast(w.t.2,TripType+VisitNumber+Weekday~Upc,value.var="ScanCount",fun.aggregate=sum)
 
+w.t.rs=dcast.data.table(w.t.dt,TripType+VisitNumber+Weekday~Upc,value.var="ScanCount",fun.aggregate=sum)
+#w.t.rs2=dcast(w.t.2,TripType+VisitNumber+Weekday~Upc,value.var="ScanCount",fun.aggregate=sum)
 
 
 #can't use because of size
